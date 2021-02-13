@@ -28,29 +28,24 @@ public class MandelbrotComplex
         this(other.real, other.image);
     }
 
-    /** Addition operation */
-    public void add(MandelbrotComplex other)
-    {
-        this.real += other.real;
-        this.image += other.image;
-    }
-
     /** Square just for Mandelbrot's fractal */
-    public void square()
+    public MandelbrotComplex square(MandelbrotComplex number)
     {
-        this.real = this.real * this.real - this.image * this.image;
-        this.image = 2 * this.real * this.image;
+        double newReal = number.real * number.real - number.image * number.image;
+        double newImaginary = 2 * number.real * number.image;
+
+        MandelbrotComplex newComplexNumber = new MandelbrotComplex(newReal, newImaginary);
+        return newComplexNumber;
     }
 
-    /** Java-style equality function */
-    public boolean equals(MandelbrotComplex other)
+    public MandelbrotComplex add(MandelbrotComplex number)
     {
-        return (Math.abs(real - other.real) <= epsilon) && (Math.abs(image - other.image) <= epsilon);
+        return new MandelbrotComplex(this.real+number.real, this.image+number.image);
     }
 
-    public double mod_squared()
+    public double abs()
     {
-        return real * real + image * image;
+        return Math.hypot(this.real, this.image);
     }
 
     public void print()

@@ -12,20 +12,19 @@ public class Mandelbrot extends FractalGenerator
         range.width = 3;
     }
 
-    public int numIterations(double a, double b)
+    public int numIterations(double x, double y)
     {
-        MandelbrotComplex z0 = new MandelbrotComplex(a, b);
-        MandelbrotComplex z = new MandelbrotComplex();
+        MandelbrotComplex z0 = new MandelbrotComplex(x, y);
+        MandelbrotComplex z = z0;
         int iterations = 0;
 
-        while(iterations < MAX_ITERATIONS && z.mod_squared() < 4)
+        while(iterations < MAX_ITERATIONS && z.abs() < 2)
         {
-            z.square();
-            z.add(z0);
+            z = z.square(z).add(z0);
             iterations++;
         }
 
-        if(iterations >= MAX_ITERATIONS)
+        if(iterations == MAX_ITERATIONS)
             return -1;
         return iterations;
     }
