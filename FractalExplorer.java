@@ -12,11 +12,8 @@ public class FractalExplorer
         fr.start();
     }
 
-    /** Size x of display in pixels */
-    private int width;    
-
-    /** Size y of display in pixels */
-    private int height;
+    /** Size of display */
+    private int displaySize;
 
     /** Actual display for Mandelbrot */
     private JImageDisplay imageDisplay;
@@ -27,16 +24,34 @@ public class FractalExplorer
     /** Range of fractal */
     private Rectangle2D.Double range;
 
-    
+    private double scaleFactor;
+
+    private class ClickHandler implements MouseListener
+    {
+        public void mousePressed(MouseEvent e)
+        {
+            if(e.getButton() == e.BUTTON1)
+            {
+                Point click = e.getPoint();
+                fractalGenerator.recenterAndZoomRange(range, click.x / 500., click.y / 500., 0.5);
+                drawFractal();
+            }
+        }
+
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+    }
 
     FractalExplorer(Rectangle2D.Double rect)
     {
         this.range = rect;
+        displaySize = (int)rect.width;
 
-        width = (int)this.range.width;
-        height = (int)this.range.height;
+        scaleFactor = 300.f;
 
-        imageDisplay = new JImageDisplay(width, height);
+        imageDisplay = new JImageDisplay(displaySize, displaySize);
         fractalGenerator = new Mandelbrot();
 
         fractalGenerator.getInitialRange(range);
@@ -60,15 +75,17 @@ public class FractalExplorer
         Container contentPane = frame.getContentPane();
         contentPane.setLayout(new BorderLayout());
 
+        imageDisplay.addMouseListener(new ClickHandler());
+
         JButton resetButton = new JButton("Reset display");
         resetButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
             {
                 imageDisplay.clearImage();
-                imageDisplay.repaint();
+                fractalGenerator.getInitialRange(range);
+                drawFractal();
             }
         });
-        
 
         contentPane.add(imageDisplay, BorderLayout.NORTH);
         contentPane.add(resetButton, BorderLayout.SOUTH);
@@ -80,12 +97,12 @@ public class FractalExplorer
 
     public void drawFractal()
     {
-        for(int y = 0; y < height; ++y)
+        for(int y = 0; y < displaySize; ++y)
         {
-            for(int x = 0; x < width; ++x)
+            for(int x = 0; x < displaySize; ++x)
             {
-                double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width, width, x);
-                double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height, height, y);
+                double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, x);
+                double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height, displaySize, y);
 
                 int iterations = fractalGenerator.numIterations(xCoord, yCoord);
 
@@ -101,5 +118,6 @@ public class FractalExplorer
                 }
             }
         }
+        imageDisplay.repaint();
     }
 }

@@ -5,10 +5,7 @@ public class MandelbrotComplex
 
     /** Imagine part of complex number */
     private double image;
-
-    /** Constant which shows the approximate equality */
-    private final double epsilon = 0.000001;
-
+    
     /** Constructor for spot */
     MandelbrotComplex(double r, double i)
     {
@@ -20,12 +17,6 @@ public class MandelbrotComplex
     MandelbrotComplex()
     {
         this(0, 0);
-    }
-
-    /** Constructor for copy Complex */
-    MandelbrotComplex(MandelbrotComplex other)
-    {
-        this(other.real, other.image);
     }
 
     /** Square just for Mandelbrot's fractal */
@@ -43,9 +34,9 @@ public class MandelbrotComplex
         return new MandelbrotComplex(this.real+number.real, this.image+number.image);
     }
 
-    public double abs()
+    public double square_abs()
     {
-        return Math.hypot(this.real, this.image);
+        return this.real * this.real + this.image * this.image;
     }
 
     public void print()

@@ -18,7 +18,7 @@ public class Mandelbrot extends FractalGenerator
         MandelbrotComplex z = z0;
         int iterations = 0;
 
-        while(iterations < MAX_ITERATIONS && z.abs() < 2)
+        while(iterations < MAX_ITERATIONS && z.square_abs() < 4)
         {
             z = z.square(z).add(z0);
             iterations++;
