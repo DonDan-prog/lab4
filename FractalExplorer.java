@@ -7,7 +7,7 @@ public class FractalExplorer
 {
     public static void main(String[] args)
     {
-        Rectangle2D.Double rect = new Rectangle2D.Double(0, 0, 500, 500);
+        Rectangle2D.Double rect = new Rectangle2D.Double(0, 0, 800, 800);
         FractalExplorer fr = new FractalExplorer(rect);
         fr.start();
     }
@@ -18,38 +18,49 @@ public class FractalExplorer
     /** Actual display for Mandelbrot */
     private JImageDisplay imageDisplay;
 
-    /** Mandelbrot generator */
-    private Mandelbrot fractalGenerator;
+    /** Abstract fractal generator */
+    private FractalGenerator fractalGenerator;
 
     /** Range of fractal */
     private Rectangle2D.Double range;
 
-    private double scaleFactor;
-
+    /** Class for handle mouse actions */
     private class ClickHandler implements MouseListener
     {
         public void mousePressed(MouseEvent e)
         {
+            /** Get the click position and transform them into fractal position */
+            Point click = e.getPoint();
+            double xCoord = FractalGenerator.getCoord(range.x, range.x + range.width, displaySize, click.x);
+            double yCoord = FractalGenerator.getCoord(range.y, range.y + range.height, displaySize, click.y);
+
+            /** When click on left button - zoom in, right - zoom out */
             if(e.getButton() == e.BUTTON1)
             {
-                Point click = e.getPoint();
-                fractalGenerator.recenterAndZoomRange(range, click.x / 500., click.y / 500., 0.5);
+                fractalGenerator.recenterAndZoomRange(range, xCoord,  yCoord, 0.5);
+                System.out.println(String.format("Center spot: x=%f, y=%f", xCoord, yCoord));
+                drawFractal();
+            }
+            else if(e.getButton() == e.BUTTON3)
+            {
+                fractalGenerator.recenterAndZoomRange(range, xCoord,  yCoord, 2);
+                System.out.println(String.format("Center spot: x=%f, y=%f", xCoord, yCoord));
                 drawFractal();
             }
         }
 
+        /** These functions not need in implementation */
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {}
         public void mouseReleased(MouseEvent e) {}
     }
 
+    /** Default constructor */
     FractalExplorer(Rectangle2D.Double rect)
     {
         this.range = rect;
         displaySize = (int)rect.width;
-
-        scaleFactor = 300.f;
 
         imageDisplay = new JImageDisplay(displaySize, displaySize);
         fractalGenerator = new Mandelbrot();
@@ -57,6 +68,7 @@ public class FractalExplorer
         fractalGenerator.getInitialRange(range);
     }
 
+    /** App launch function */
     public void start()
     {
         SwingUtilities.invokeLater(new Runnable() {
@@ -67,6 +79,7 @@ public class FractalExplorer
         });
     }
 
+    /** Gui construction function */
     public void createAndShowGUI()
     {
         JFrame frame = new JFrame("Mandelbrot Set");
@@ -95,6 +108,7 @@ public class FractalExplorer
         frame.setResizable(false);
     }
 
+    /** Fractal draw function */
     public void drawFractal()
     {
         for(int y = 0; y < displaySize; ++y)

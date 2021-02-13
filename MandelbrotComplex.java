@@ -5,7 +5,7 @@ public class MandelbrotComplex
 
     /** Imagine part of complex number */
     private double image;
-    
+
     /** Constructor for spot */
     MandelbrotComplex(double r, double i)
     {
@@ -19,26 +19,23 @@ public class MandelbrotComplex
         this(0, 0);
     }
 
-    /** Square just for Mandelbrot's fractal */
-    public MandelbrotComplex square(MandelbrotComplex number)
+    /** Square and addition for little optimization just for Mandelbrot's fractal */
+    public void squareAndAdd(MandelbrotComplex number)
     {
-        double newReal = number.real * number.real - number.image * number.image;
-        double newImaginary = 2 * number.real * number.image;
+        double new_real = this.real * this.real - this.image * this.image + number.real;
+        double new_imag = 2 * this.real * this.image + number.image;
 
-        MandelbrotComplex newComplexNumber = new MandelbrotComplex(newReal, newImaginary);
-        return newComplexNumber;
+        this.real = new_real;
+        this.image = new_imag;
     }
 
-    public MandelbrotComplex add(MandelbrotComplex number)
-    {
-        return new MandelbrotComplex(this.real+number.real, this.image+number.image);
-    }
-
-    public double square_abs()
+    /** Returns squared module for optimiztion purposes */
+    public double squareAbs()
     {
         return this.real * this.real + this.image * this.image;
     }
 
+    /** Print function for complex number */
     public void print()
     {
         System.out.println(String.format("%f%s%fi", real, image > 0 ? "+" : "", image));

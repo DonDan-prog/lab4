@@ -4,6 +4,7 @@ public class Mandelbrot extends FractalGenerator
 {
     static final int MAX_ITERATIONS = 2000;
 
+    /** Sets the initial values for Mandelbrot set */
     public void getInitialRange(Rectangle2D.Double range)
     {
         range.x = -2;
@@ -12,15 +13,16 @@ public class Mandelbrot extends FractalGenerator
         range.width = 3;
     }
 
+    /** Fractal function that actually counts the num of iterations to check if (x,y) in Mandelbrot's set */
     public int numIterations(double x, double y)
     {
         MandelbrotComplex z0 = new MandelbrotComplex(x, y);
-        MandelbrotComplex z = z0;
+        MandelbrotComplex z = new MandelbrotComplex();
         int iterations = 0;
 
-        while(iterations < MAX_ITERATIONS && z.square_abs() < 4)
+        while(iterations < MAX_ITERATIONS && z.squareAbs() < 4)
         {
-            z = z.square(z).add(z0);
+            z.squareAndAdd(z0);
             iterations++;
         }
 
