@@ -14,21 +14,22 @@ public class JImageDisplay extends JComponent
 
         Dimension size = new Dimension(w, h);
         setPreferredSize(size);
+
+        clearImage();
     }
 
     /** Function to draw the image */
-    public void paintComponent(Graphics g)
+    protected void paintComponent(Graphics g)
     {
-        paintComponent(g);
         g.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
     }
 
     /** Function to clearing image */
     public void clearImage()
     {
-        for(int x = 0; x < image.getWidth(); ++x)
+        for(int y = 0; y < image.getHeight(); ++y)
         {
-            for(int y = 0; y < image.getHeight(); ++y)
+            for(int x = 0; x < image.getWidth(); ++x)
             {
                 image.setRGB(x, y, 0); // 0 - is black, as i think
             }
